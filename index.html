@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تصوير الشاشة</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif; /* استخدام خط Roboto */
+            margin: 0;
+            padding: 0;
+            background-color: #141414;
+            display: flex;
+            flex-direction: column; /* جعل العناصر عمودية */
+            align-items: center;
+            height: 100vh;
+        }
+        #logo {
+            font-family: 'cario', sans-serif; /* خط خاص للشعار */
+            font-size: 2em; 
+            color: rgb(255, 255, 255);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin: 0px; /* مسافة من الأعلى */
+        }
+/* تحسين شكل عنصر اختيار الميكروفون */
+
+#microphoneSelect-titel {
+    color: #ffffff;
+    padding: 5px;
+    cursor: text;
+
+}
+
+#microphoneSelect {
+    padding: 10px; /* إضافة تباعد داخلي */
+    border: 2px solid rgb(4, 236, 81); /* لون الحدود */
+    border-radius: 8px; /* زوايا دائرية */
+    background-color: #222; /* لون الخلفية */
+    color: #fff; /* لون النص */
+    font-size: 16px; /* حجم الخط */
+    cursor: pointer; /* تغيير المؤشر عند التمرير فوق العنصر */
+    width: 100%; /* جعل العرض 100% ليتناسب مع العنصر الحاوي */
+    max-width: 300px; /* تحديد الحد الأقصى للعرض */
+    transition: background-color 0.3s, border-color 0.3s; /* تأثير الانتقال */
+}
+
+#microphoneSelect:hover {
+    background-color: rgb(35, 35, 35); /* تغيير لون الخلفية عند التمرير */
+    border-color: rgb(12, 138, 54); /* تغيير لون الحدود عند التمرير */
+}
+        
+        #controls, #controls1 {
+            display: flex;
+            flex-direction: column; /* جعل الأزرار عمودية */
+            align-items: center;
+            margin-bottom: 20px; /* مساحة أسفل الأزرار */
+        }
+        #controls button, #controls1 button {
+            margin: 10px;
+            padding: 15px 30px; /* زيادة الحجم */
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #controls button {
+            background-color: rgb(4, 236, 81);
+        }
+        #controls button:hover {
+            background-color: rgb(12, 138, 54);
+        }
+        #controls1 button {
+            background-color: rgb(255, 3, 3);
+        }
+        #controls1 button:hover {
+            background-color: rgb(138, 12, 12);
+        }
+        button:disabled {
+            background-color: #cccccc; 
+            cursor: not-allowed; 
+            opacity: 0.6; 
+        }
+        #downloadMessage {
+            font-size: 16px;
+            margin-top: 10px;
+            color: #333; 
+            text-align: center; /* محاذاة النص إلى المركز */
+        }
+        .download-button {
+            display: inline-block; 
+            padding: 15px 30px; /* زيادة الحجم */
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px; 
+            background-color: rgb(35, 223, 98);
+            color: white; 
+            text-decoration: none; 
+            transition: background-color 0.3s ease, transform 0.2s; 
+            position: absolute; /* لجعل الزر في الزاوية العليا اليمنى */
+            top: 20px;
+            right: 20px;
+            z-index: 1000; /* لضمان ظهور الزر فوق العناصر الأخرى */
+        }
+        .download-button:hover {
+            background-color: rgb(12, 138, 54); 
+            transform: translateY(-2px); 
+        }
+        hr {
+            width: 80%; /* عرض الخط */
+            border: none; /* إزالة الحدود الافتراضية */
+            height: 2px; /* ارتفاع الخط */
+            background-color: #ffffff; /* لون الخط */
+            margin: 20px 0; /* مساحة حول الخط */
+        }
+        canvas {
+            border: 1px solid #000; /* حدود للقماش */
+            margin: 20px 0; /* مساحة حول القماش */
+        }
+        /* تغيير حجم الـ canvas */
+#waveform {
+    display: block;
+    margin: 20px auto; /* لجعلها وسط الصفحة */
+    border: 2px solid #000; /* إطار أسود */
+    border-radius: 10px; /* زوايا دائرية */
+}
+#screenPreview {
+    display: block;
+    margin: 20px auto;
+    border: 2px solid #000;
+    border-radius: 10px;
+}
+
+#countdown {
+    font-size: 3em;
+    color: red;
+    text-align: center;
+    margin: 20px auto;
+}
+
+
+    </style>
+</head>
+<body>
+    <div id="logo">
+        <h1>Fast Record <i id="logo icon" class="fa-solid fa-clapperboard"></i></h1>
+    </div>
+
+    <label id="microphoneSelect-titel">:<i class="fa-solid fa-microphone-lines"></i>اختر الميكروفون</label>
+    <select id="microphoneSelect"></select>
+
+    <video id="screenPreview" width="600" height="400" autoplay muted style="border:1px solid #000;"></video>
+<div id="countdown" style="font-size: 2em; display: none; color: red; text-align: center;">3</div>
+
+    <canvas id="waveform" width="400" height="80" style="border:1px solid #000;"></canvas>
+    <div id="controls">
+        <button id="startBtn"><i class="fa-solid fa-video"></i>   بدء التصوير </button>
+    </div>
+    <div id="controls1">
+        <button id="stopBtn" disabled><i class="fa-solid fa-stop"></i> إيقاف التصوير</button>
+    </div>
+
+    <div id="downloadMessage">
+        <a id="downloadLink" class="download-button">تحميل الفيديو<i id="logo icon" class="fa-solid fa-download"></i></a> 
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
